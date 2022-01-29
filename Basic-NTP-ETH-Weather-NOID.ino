@@ -85,12 +85,16 @@ void loop() {
 
 
 // I am only interested in the current temperature on this request
-// you have to use your location after the q in the format CITY,Country
-// and your ID from openweathermap for appid = XXXXXXXXXXXXXXXXXXXXX
+// you have to use your location after the q
+// and your ID from openweathermap for appid
 
 void get_temperature () {
   // Connect to HTTP server
-
+  while (Ethernet.linkStatus() == LinkOFF) {
+    Ethernet.begin(mac); // Start the network
+    delay ( 500 );
+    Serial.print ( "." );
+  }
   EthernetClient client;
   client.setTimeout(500);
   if (!client.connect("api.openweathermap.org", 80)) {
@@ -98,8 +102,7 @@ void get_temperature () {
     return;
   }
   // Send HTTP request
-  
-  client.println(F("GET /data/2.5/weather?q=XXXXXXX,UK&units=metric&appid=XXXXXXXXXXXXXXXXXX"));
+  client.println(F("GET /data/2.5/weather?q=XXXXXXXX,XXX&units=metric&appid=XXXXXXXXXXXXXXXXXXXXXXXX"));
   client.println(F("Host: api.openweathermap.org"));
   client.println(F("Connection: close"));
   if (client.println() == 0) {
@@ -137,7 +140,7 @@ void get_temperature () {
   //
   String sensor = doc["main"]["temp"];
   String description = doc["weather"][0]["description"];
- 
+
   //Serial.println(description);
   //used for testing the decoding:
   //double latitude = doc["coord"]["lat"];
@@ -146,11 +149,14 @@ void get_temperature () {
   //Serial.println(sensor);
   //Serial.println(latitude, 6);
   //Serial.println(longitude, 6);
-  
+  char buf2[20]; // one line on the LCD
+  sprintf(buf2, "%S \xDF C.       ", sensor);
   lcd.setCursor(0, 2);
-  lcd.print(sensor + "\xDF""C.");
+  lcd.print(buf2);
+  char buf3[20]; // one line on the LCD
+  sprintf(buf3, "%S           ", description);
   lcd.setCursor(0, 3);
-  lcd.print(description);
+  lcd.print(buf3);
 }
 
 int set_rtc_to_ntp(int local_counter) {
