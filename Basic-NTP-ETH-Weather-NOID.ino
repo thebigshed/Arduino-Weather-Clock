@@ -102,7 +102,7 @@ void get_temperature () {
     return;
   }
   // Send HTTP request
-  client.println(F("GET /data/2.5/weather?q=XXXXXXXX,XXX&units=metric&appid=XXXXXXXXXXXXXXXXXXXXXXXX"));
+  client.println(F("GET /data/2.5/weather?q=XXXXXXXXX,XXXXX&units=metric&appid=XXXXXXXXXXXXXXXXXXXX"));
   client.println(F("Host: api.openweathermap.org"));
   client.println(F("Connection: close"));
   if (client.println() == 0) {
@@ -149,14 +149,16 @@ void get_temperature () {
   //Serial.println(sensor);
   //Serial.println(latitude, 6);
   //Serial.println(longitude, 6);
-  char buf2[20]; // one line on the LCD
-  sprintf(buf2, "%S \xDF C.       ", sensor);
   lcd.setCursor(0, 2);
-  lcd.print(buf2);
-  char buf3[20]; // one line on the LCD
-  sprintf(buf3, "%S           ", description);
+  lcd.print("              ");
+  lcd.setCursor(0, 2);
+  lcd.print(sensor + "\xDF C.");
+//  Serial.println(buf2);
   lcd.setCursor(0, 3);
-  lcd.print(buf3);
+  lcd.print("                  ");
+  lcd.setCursor(0, 3);
+  lcd.print(description);
+//  Serial.println(buf3);
 }
 
 int set_rtc_to_ntp(int local_counter) {
